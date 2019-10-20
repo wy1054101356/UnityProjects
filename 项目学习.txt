@@ -1,0 +1,5 @@
+2019.3.5旋转的圆圈插针游戏
+1.//控制圆旋转 不是围绕 xy轴 而是 不可看见的z轴 
+        transform.Rotate(new Vector3(0, 0, speed * Time.deltaTime));
+
+2.

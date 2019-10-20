@@ -1,0 +1,19 @@
+ManifestFileVersion: 0
+CRC: 3117335168
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: a785ab6d064ca7c9e73fcd4c07e3d160
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 51a16e16d5113854a16091e54ae5bb0d
+HashAppended: 0
+ClassTypes:
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+Assets:
+- Assets/Interactive Monitor/Materials/glass.mat
+- Assets/Interactive Monitor/Materials/light.mat
+Dependencies: []

@@ -1,0 +1,30 @@
+ManifestFileVersion: 0
+CRC: 3767200179
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: fe29a675b938160e88d043f3bc08f7c0
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 43917c7e82ed3ae0a408b3ea37ec80f7
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 65
+  Script: {instanceID: 0}
+Assets:
+- Assets/Prefabs/CubeGreen.prefab
+- Assets/Prefabs/CubeBlack.prefab
+Dependencies:
+- M:/UNITYGAME/studyProject/class10_AssetBundle/AssetBundlesDirectory/share.u3d

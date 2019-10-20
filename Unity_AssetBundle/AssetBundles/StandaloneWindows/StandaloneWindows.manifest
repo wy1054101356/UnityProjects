@@ -1,0 +1,11 @@
+ManifestFileVersion: 0
+CRC: 2327780385
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: share.u3d
+      Dependencies: {}
+    Info_1:
+      Name: scenes/cube.u3d
+      Dependencies:
+        Dependency_0: share.u3d

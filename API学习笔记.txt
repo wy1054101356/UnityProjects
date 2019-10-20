@@ -1,0 +1,216 @@
+2018.2.27 API学习
+
+1.学会看官网的document 文档手册
+	https://docs.unity3d.com/Manual/index.html?_ga=2.9919157.1858563108.1551180567-	818865798.1549958940
+
+2.游戏基本设置中的数据
+      //一些游戏中比较重要的数据
+
+        //deltatime 每一帧之间的时间间隔
+        Debug.Log("time.deltaTIme = " + Time.deltaTime);
+        //游戏时间方面的
+        Debug.Log("time.fixedTime = " + Time.fixedTime);
+        Debug.Log("time.time = " + Time.time);
+
+        //timeSinceLevelLoad 游戏从开始加载所需要用的时间
+        Debug.Log("time.timeSinceLevelLoad = " + Time.timeSinceLevelLoad);
+
+        //framecount 游戏当前帧数
+        Debug.Log("time.frameCount = " + Time.frameCount);
+        //realTimeSinceStartUp 游戏从开始到暂停获得这个数据的时间
+        Debug.Log("time.realtimeSinceStartup = " + Time.realtimeSinceStartup);
+        Debug.Log("time.smoothDeltaTime = " + Time.smoothDeltaTime);
+
+        // timescale 游戏间歇设置数据
+        Debug.Log("time.timeScale = " + Time.timeScale);
+        Debug.Log("time.unscaledDeltaTime = " + Time.unscaledDeltaTime);
+
+3.让物体向前走 物体.Translate（vector3.forward * TIme.deltaTime ）
+	因为这个句子是在update中写的 所以会运行很多次 物体就会运行的很快
+	解决就是 乘以帧数之间的时间间隔 这样时间间隔* 当前执行次数就是一秒
+	也就是一秒走了forward的一米
+
+4.////创建 对象的方法
+        //GameObject cubeBox = new GameObject("Cube");
+
+        ////第二种方法 克隆任意Object
+        //GameObject.Instantiate(Prefabs);
+
+        ////第三种 利用创建原始的形状、对象
+        //go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        ////给游戏对象添加组件的方式
+        //go.AddComponent<Rigidbody>(); //添加刚体
+        //go.AddComponent<APIEvent>(); //添加自己写的脚本代码都可以
+
+
+5.////设置对象的的激活状态
+        //Debug.Log(go.activeInHierarchy);
+        //go.SetActive(false);
+        //Debug.Log(go.activeInHierarchy);
+        //Debug.Log(go.tag);
+
+        ////对象和对象的组件都从 gameObject继承而来， 组件本身是没有名字的
+        ////所以 下面两个输出的结果是一样的 都是之前生成的Sphere
+        //Debug.Log(go.name);
+        //Debug.Log(go.GetComponent<Transform>().name);
+
+        ////可以通过基类gameObject的静态方法 findObjectOfType 来找到泛型（你需要的）对象
+        //Light light = GameObject.FindObjectOfType<Light>();
+        ////enabled 和 active类似 enabled对组件的使用可否进行操作  
+	////active是对gameObject游戏对象
+        //light.enabled =  false ;
+
+        ////对于每一个gameObject游戏对象 都存在他在场景中的坐标
+        ////因此，每一个游戏对象都有不可取消的组件 transform 
+        ////以下是查找游戏对象的所有 transform 并且不会查找未激活的对象
+        //Transform[] ts = GameObject.FindObjectsOfType<Transform>();
+        //foreach(Transform t in ts)
+        //{
+        //    Debug.Log(t);
+        //   Debug.Log(t.name); //输出获取到（激活的）每一个对象的名字 和对象本身名字
+        //
+
+6.协程的概念，和使用方法coroutine
+	对于普通的方法，就类似编程中的函数调用，会等带调用的函数执行完毕后
+	再执行调用函数之后的内容
+	协程方法：类似线程一样，调用的协程方法，不影响源调用代码的执行 两者是同步的
+	协程可以看作是C#与unity在线程之间的操作
+	其二，协程方法可以中间暂停，任意代码出暂停多少时间
+	遇到了 yield 和return yield 也是返回 但是他用在函数里 可以在某一时刻退出并
+	返回当前计算保存的值， return 只会返回最终值或者中间计算结果 
+	启动： StartCoroutine("Fade"); //这里写方法的名字即可 在没有参数的情况下
+	关闭： StopCoroutine("Fade");
+========================================================================================
+2019.2.28
+1.//给游戏对象gameObject发送消息 包括以下的所有组件
+        //target.BroadcastMessage("hellow"); //带返回的 如果没有接受者 会报错
+
+        //包含三个参数的发送消息，没有接受者不会报错 发送的attack 是一个函数
+        //target.BroadcastMessage("Attack",null,SendMessageOptions.DontRequireReceiver);
+
+2.插值和平均
+	 //向前平移 速度恒定 和插值不一样 插值是按比例进行的所以会逐渐变慢
+        //cube.position = new Vector3(-1, 1, Mathf.MoveTowards(0, 10, 1f));                  
+        //乒乓运动 来回的运动，
+        //cube.position = new Vector3(-1,1, Mathf.PingPong(Time.time * speed, 10));
+
+3.//GetAxis 用来对轴移动，可以双方向移动， 而且具有加速度和 惯性作用
+        //cube.Translate(Vector3.right * Time.deltaTime * Input.GetAxis("Horizontal"));
+        //GetAxisRaw 对轴移动，双方向移动 但是返回值为 1或者 -1 效果就是立马进行运动和停止
+        cube.Translate(Vector3.right * Time.deltaTime * Input.GetAxisRaw("Horizontal") );
+        cube.Translate(Vector3.forward * Time.deltaTime * Input.GetAxis("Vertical")  );
+========================================================================================
+2019.3.2
+1.专有向量对于2D平面的坐标组合 vector2 向量
+	当需要修改一个物体的transform组件的坐标的时候 不能使用以下方式
+	 //transform.position.x = 1;//错误的
+	正确的操作是 先建立一个可以操作的vector2 然后把位置赋值给这个向量
+	然后修改向量的具体坐标 如 vector2.x = 2;
+	最后把这个向量代表的坐标在赋值回去给transform组件的position
+	Vector2 nowPosition = transform.position;
+        nowPosition.x = 11;
+        transform.position = nowPosition;
+2.向量长度限定，在角度不变的情况下，让长度边短
+	print(Vector2.ClampMagnitude(vb, 5));
+
+3.向量运动的一些运动方式
+	//Movetowards匀速运动  lerp是 先快后慢的运动
+        va = Vector2.MoveTowards(va, vb, Time.deltaTime);
+========================================================================================
+2019.3.3
+1.vector2的一些常用方法	
+	//print(va.magnitude);    //平方和
+        //print(vb.sqrMagnitude); //平方和开根号
+ 	//下面这个函数的意思是 将vb向量的长度固定到10 但是方向不变 也就是 
+        //从  6 8 10勾股 到 3 4 5  勾股 所以最后的结果是 (3.0,4.0) 向量
+        //print(Vector2.ClampMagnitude(vb, 5));
+	向量的加减乘除
+	 Vector2 res1 = vb - va;
+        Vector2 res2 = va + vb;
+        Vector2 res3 = va * vb;
+        Vector2 res4 = vc / 3;
+        Vector2 res5 = vc / vb;
+==========================================================================================
+2019.3.4
+1.随机数的一些方法
+	//Random.InitState(0);//随机数参数种子 固定的 所以每次随机数分布都是一样的
+        Random.InitState((int)System.DateTime.Now.Ticks);//利用时间计时周期做种
+	//print(Random.Range(4, 10));//生成随机数 整数 从4-9 不包含最大的
+        //print(Random.Range(4,5f));//生成随机小数 
+
+2.生成随机位置
+	//让cube的位置在一个一米的圆*3范围内随机生成
+        //cube.position = Random.insideUnitCircle * 3;
+        cube.position = Random.insideUnitSphere * 3;//球体
+
+3.四元数quaternion
+
+	//以下都是输出对象的旋转角 第一个是vector3 第二个是四元数模式
+        //cube.eulerAngles = new Vector3(1, 1, 1);//正确给物体的旋转赋值
+
+        print(cube.eulerAngles);//欧拉角
+        //四元数是计算中的使用 一般在代码中不直接使用
+        print(cube.rotation);//四元数 世界坐标
+        print(cube.localRotation);//局部坐标的 旋转角四元数
+	
+4.三元和四元的转换
+	 //Quaternion.LookRotation 把三元方向转换成四元数角度方向
+	（实用）如何让主角的面对角度指向敌人
+	//获取敌人减去主角的 向量方向
+        Vector3 dir = enemy.position - player.position;
+        dir.y = 0;//忽略海拔地形导致的人物“弯腰”
+        //设置主角的方向 = 把向量转换成四元数角度后的方向 一下就转过去的方法
+        player.rotation =  Quaternion.LookRotation(dir);
+	//主角方向利用插值 一点一点的转向最终方向 
+        player.rotation = Quaternion.Slerp(player.rotation, target, Time.deltaTime);
+
+5.刚体组件设置物体的position 并利用改变position来移动物体 比直接用transform更快
+	//print(playerRgd.position == playerRgd.transform.position); //两者相等
+	移动物体的一个改良，利用带插值运算的 MovePosition方法可以更加平滑的移动物体
+	//刚体也可以设置物体的移动和坐标等等，并且由于跳过计算 比使用 transform组件更快
+        //playerRgd.position = playerRgd.transform.position + Vector3.forward * Time.deltaTime * 10;
+        //这里利用MovePosition 因为利用了插值运算 所以移动比直接设置位置移动 要更平滑
+        playerRgd.MovePosition(playerRgd.transform.position + Vector3.back * Time.deltaTime * 20);
+
+6.给物体施加一个力
+	playerRgd.AddForce( int );//单位是牛顿
+
+
+7.摄像机的相关数据和方法
+	//获取主摄像机上的camera组件
+        //Camera mainCamera = GameObject.Find("MainCamera").GetComponent<Camera>();
+        //或者利用camera的标签tag = MainCamera 这个条件也可以获得
+	mainCamera = Camera.main;
+	//获取鼠标与屏幕的交点射线 
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit; //这个是碰撞的物体
+        bool isCollider = Physics.Raycast(ray, out hit); //检测是否有物体与射线碰撞
+        if (isCollider)
+        {
+            print(hit.collider); //是就输出与射线碰撞到的物体
+        }
+
+8.一些基本的工程项目文件路径
+	print(Application.dataPath); 		//工程数据路径   
+        print(Application.streamingAssetsPath); //可以通过文件流读取的路径
+        print(Application.persistentDataPath); 	//可以进行实体化的数据路径
+        print(Application.temporaryCachePath); 	//临时的缓冲数据路径
+
+9.其他的一些功能
+	加载网页 Application.OpenURL("http://www.sizhisheng.icoc.bz");
+	界面截屏 ScreenCapture.CaptureScreenshot("ScreenShot.jpg");
+	加载场景 需要导入命名空间 Using UnityEngine.sceneManager
+	    //打开场景的不同方法 和 打开模式 默认模式是销毁当前 加载新的 
+            SceneManager.LoadScene(1);
+            //SceneManager.LoadScene("Menu");
+
+
+
+
+
+
+
+
+
+
+
